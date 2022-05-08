@@ -121,12 +121,6 @@ scripts/
 # misc
 .DS_Store
 
-# commands
-commands.js
-
-# messages
-messages.js
-
 # media
 src/media
 
