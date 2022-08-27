@@ -7,15 +7,6 @@
     "type": "git",
     "url": "git+https://github.com/zacharyberson/TwitchBot_React.git"
   },
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "^3.0.1",
-    "tmi.js": "^1.8.5"
-  },
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "\"%CD%/scripts/deploy.bat\"",
@@ -41,6 +32,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^3.0.1",
+    "tmi.js": "^1.8.5"
   },
   "devDependencies": {
     "sass": "^1.48.0"
