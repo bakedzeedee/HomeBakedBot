@@ -117,6 +117,10 @@ const shoutout = (target, context, query) => {
     sayShoutout(target, userPure);
 }
 
+const tacos = (target, context, query) => {
+    client.say(target, '🌮🌮🌮').catch((e) => { console.error(e) });
+}
+
 const timeout = (target, context, query) => {
     const defaultTimeout = 30;
     const split = query.split(' ');
@@ -175,6 +179,14 @@ const yes = (target, context, query) => {
     }
 }
 
+const deezNuts = (target, context, query) => {
+    const querySplit = query.split(" ");
+    const liklihood = 1;
+    if (Math.random() < liklihood) {
+        client.say(target, `deez nuts haha got em`).catch((e) => { console.error(e) });
+    }
+}
+
 const displayCommands = (target, context, query) => {
     const groupLevel = getGroupLevel(context);
     const groups = ['user', 'vip', 'mod', 'broadcaster', 'superuser'].slice(0, groupLevel);
@@ -224,6 +236,7 @@ export const commands = {
         '!media': displayMedia,
         '!sfx': displayMedia,
         '!roll': rollDice,
+        '!tacos': tacos,
         '!timer': timer
     },
     vip: {
@@ -242,6 +255,7 @@ export const hiddenCommands = {
     user: {
         '!8ball': magic8Ball,
         '!ban': fakeBan,
+        '!gif': searchGif,
         '!nomods': nomods,
         '!onlyfans': onlyfans
     },
@@ -257,7 +271,6 @@ export const hiddenCommands = {
 
 export const media = {
     user: {
-        '!gif': searchGif,
         '!tbc': tobecontinued,
         '!objection': objection
     },
@@ -290,6 +303,7 @@ export const hiddenMedia = {
 
 export const regex = {
     '^!\\w+($| .*)' : playMedia,
-    '.+er$' : hardlyKnewHer,
+    '^.+er$' : hardlyKnewHer,
+    '^((these)|(deez)|(d\'?s))\\??$': deezNuts,
     '^no+$' : yes
 };
