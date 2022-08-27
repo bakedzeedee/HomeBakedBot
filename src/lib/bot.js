@@ -1,9 +1,12 @@
+import { refreshToken } from '../services/twitchSession.js';
 import client from './clientHelper.js';
 import { processMessage } from './messageParser.js';
 import { intervalMessages, stopIntervals } from './messageScheduler.js';
 import { DateUtil } from './utility.js';
 
 export default () => {
+    refreshToken(); // grab a twitch token
+
     // Register our event handlers (defined below)
     client.on('message', onMessageHandler);
     client.on('connected', onConnectedHandler);
