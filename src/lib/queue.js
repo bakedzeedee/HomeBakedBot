@@ -4,7 +4,7 @@ class Queue {
         this.queue = [];
         this.poller = null;
         this.blocked = false;
-        document.addEventListener("Clear", () => {this.blocked = false});
+        document.addEventListener("React-Clear", () => {this.blocked = false});
     }
 
     enqueue(fn, context, args) {

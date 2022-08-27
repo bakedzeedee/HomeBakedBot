@@ -1,6 +1,7 @@
-import https from 'https';
+import { sendRequest } from './apiUtil';
+import { getToken } from './twitchSession';
 
-export const getAccessToken = (callback = res => {}) => {
+export const getAccessToken = async (callback = res => { }) => {
     const options = {
         hostname: 'id.twitch.tv',
         path: '/oauth2/token'
@@ -10,54 +11,27 @@ export const getAccessToken = (callback = res => {}) => {
         method: 'POST'
     };
 
-    const responseParser = (response) => {
-        let data = '';
-    
-        response.on('data', (chunk) => {
-            data += chunk;
-        });
-    
-        response.on('end', () => {
-            callback(JSON.parse(data));
-        });
-    };
-
-    console.log("sending access token request");
-    const req = https.request(options, responseParser);
-    req.end();
+    sendRequest(options, callback);
 };
 
-export const getBroadcasterId = (username, accessToken, callback = res => {}) => {
+export const getBroadcasterId = async (username, callback = res => { }) => {
     const options = {
         hostname: 'api.twitch.tv',
         path: `/helix/users?login=${username}`,
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + accessToken,
+            'Authorization': 'Bearer ' + getToken(),
             'Client-Id': process.env.REACT_APP_T_CLIENT_ID
         }
     };
 
-    const responseParser = (response) => {
-        let data = '';
-    
-        response.on('data', (chunk) => {
-            data += chunk;
-        });
-    
-        response.on('end', () => {
-            callback(JSON.parse(data));
-        });
-    };
-
-    console.log("sending user ID request");
-    const req = https.request(options, responseParser);
-    req.end();
+    sendRequest(options, callback);
 };
 
-export const getUserInfo = (broadcasterName, accessToken, callback = res => {}) => {
-    getBroadcasterId(broadcasterName, accessToken, res => {
-        if(res?.data[0]?.id) {
+export const getUserInfo = async (broadcasterName, callback = res => { }) => {
+
+    const userInfoCallback = async res => {
+        if (res?.data[0]?.id) {
             console.log("got user ID: " + res.data[0].id);
 
             const options = {
@@ -65,35 +39,24 @@ export const getUserInfo = (broadcasterName, accessToken, callback = res => {}) 
                 path: `/helix/channels?broadcaster_id=${res.data[0].id}`,
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + accessToken,
+                    'Authorization': 'Bearer ' + getToken(),
                     'Client-Id': process.env.REACT_APP_T_CLIENT_ID
                 }
             };
 
-            const responseParser = (response) => {
-                let data = '';
-            
-                response.on('data', (chunk) => {
-                    data += chunk;
-                });
-            
-                response.on('end', () => {
-                    callback(JSON.parse(data));
-                });
-            };
-
-            console.log("sending user Info request");
-            const req = https.request(options, responseParser);
-            req.end();
+            sendRequest(options, callback);
         } else {
             callback(null);
         }
-    });
+    };
+
+    getBroadcasterId(broadcasterName, userInfoCallback);
 };
 
-export const getClips = (broadcasterName, startDate, endDate, maxNumberOfClips, accessToken, callback = res => {}) => {
-    getBroadcasterId(broadcasterName, accessToken, res => {
-        if(res?.data[0]?.id) {
+export const getClips = async (broadcasterName, startDate, endDate, maxNumberOfClips, callback = res => { }) => {
+    
+    const clipsCallback = async res => {
+        if (res?.data && res.data[0]?.id) {
             console.log("got user ID: " + res.data[0].id);
 
             const options = {
@@ -105,58 +68,33 @@ export const getClips = (broadcasterName, startDate, endDate, maxNumberOfClips, 
                     + `&started_at=${startDate}`,
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + accessToken,
+                    'Authorization': 'Bearer ' + getToken(),
                     'Client-Id': process.env.REACT_APP_T_CLIENT_ID
                 }
             };
 
-            const responseParser = (response) => {
-                let data = '';
-            
-                response.on('data', (chunk) => {
-                    data += chunk;
-                });
-            
-                response.on('end', () => {
-                    callback(JSON.parse(data));
-                });
-            };
-
-            console.log("sending getClips request");
-            const req = https.request(options, responseParser);
-            req.end();
+            sendRequest(options, callback);
         } else {
             callback(null);
         }
-    });
+    };
+    
+    getBroadcasterId(broadcasterName, clipsCallback);
 };
 
-export const getClipV5 = (slug, callback = res => {}) => {
-    console.log("getting clip info via deprecated API");
+export const getClipInfo = async (clipIDs, callback = res => { }) => {
+    const clips = clipIDs.join(',');
 
     const options = {
         hostname: 'api.twitch.tv',
-        path: `/kraken/clips/${slug}`,
+        path: '/helix/clips'
+            + `?id=${clips}`,
         method: 'GET',
         headers: {
-            'Accept': 'application/vnd.twitchtv.v5+json',
-            'Client-ID': process.env.REACT_APP_T_CLIENT_ID
+            'Authorization': 'Bearer ' + getToken(),
+            'Client-Id': process.env.REACT_APP_T_CLIENT_ID
         }
     };
 
-    const responseParser = (response) => {
-        let data = '';
-    
-        response.on('data', (chunk) => {
-            data += chunk;
-        });
-    
-        response.on('end', (chunk) => {
-            callback(JSON.parse(data));
-        });
-    };
-
-    console.log("sending getClip v5 request");
-    const req = https.request(options, responseParser);
-    req.end();
+    sendRequest(options, callback);
 };

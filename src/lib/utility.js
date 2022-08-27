@@ -4,6 +4,13 @@ export const NumUtil = {
     },
     isFloat: (query) => {
         return !isNaN(+query) && !isNaN(parseFloat(query));
+    },
+    smallest: (array) => {
+        array.sort((a, b) => {
+            return a - b;
+        });
+        console.log(`array: ${array}`);
+        return array[0]
     }
 };
 

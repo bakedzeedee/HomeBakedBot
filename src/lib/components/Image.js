@@ -12,7 +12,7 @@ class Image extends React.Component {
     }
 
     // called on subsequent RenderDOM.render
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.toggleView(true);
         this.queueDisableView(this.props.timeout || 1000);
     }

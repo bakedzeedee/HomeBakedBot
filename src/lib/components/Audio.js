@@ -10,22 +10,13 @@ class Audio extends React.Component {
         this.setEnded = this.setEnded.bind(this);
     }
 
-    // called on subsequent RenderDOM.render
-    componentWillReceiveProps(nextProps) {
-        this.setState((state, props) => {
-            return { played: false };
-        });
-    }
-
     componentDidMount() { };
     componentWillUnmount() { };
 
     render() {
         if (this.state.played) {
-            document.dispatchEvent(new CustomEvent("Clear"));
             return (<div></div>);
         } else {
-            document.dispatchEvent(new CustomEvent("Draw"));
             return (
                 <audio id={this.props.id} src={this.props.source} autoPlay onEnded={this.setEnded} />
             );
@@ -34,6 +25,7 @@ class Audio extends React.Component {
 
     setEnded() {
         console.log('fired');
+        document.dispatchEvent(new CustomEvent('React-Clear'));
         this.setState((state, props) => {
             return { played: true };
         });
